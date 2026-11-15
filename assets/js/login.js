@@ -22,6 +22,7 @@
     const fail = msg => { busy = false; b.disabled = false; pb.hidden = true; bar.style.width = 0; pw.value = ''; UI.modal({ title: 'Login Gagal', body: UI.esc(msg) }); };
     if (r.err === 'locked') return fail('Terlalu banyak percobaan gagal. Coba lagi dalam ' + r.wait + ' detik.');
     if (r.err === 'session') return fail('Browser memblokir penyimpanan sesi. Aktifkan penyimpanan situs atau jangan gunakan mode private.');
+    if (r.err === 'net') return fail('Tidak dapat terhubung ke database. Periksa koneksi internet lalu coba lagi.');
     if (r.err === 'bad') return fail((role === 'student' ? 'NIM' : 'Email') + ' atau password salah.');
     if (r.err) return fail('Terjadi kesalahan sistem. Muat ulang halaman lalu coba lagi.');
     bar.style.width = '100%'; UI.toast('Selamat datang, ' + r.user.name); setTimeout(() => location.href = role + '/dashboard.html', 500);

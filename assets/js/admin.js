@@ -21,10 +21,10 @@ if (me) {
         <div class="row muted" style="gap:12px;flex-wrap:wrap"><span><b style="color:var(--blue)">■</b> Terjawab ${ok}</span><span><b style="color:var(--red)">■</b> Belum ${no}</span><span><b style="color:var(--gray)">■</b> Lainnya ${oth}</span></div></div>
       <div class="col"><h3 class="sec">PERLU DITINDAKLANJUTI</h3><div class="scroll" style="flex:none">${todo.map(l => `<div class="li"><div>${UI.esc(l.q)}<br><span class="muted">${UI.esc(l.name)} · ${fmt(l.ts)}</span></div><button class="btn sm" data-a="${l.id}">+ Dokumen</button></div>`).join('') || '<p class="muted pad">Semua pertanyaan terjawab</p>'}</div>
         <h3 class="sec">TERBARU</h3><div class="scroll" style="flex:none">${recent.map(l => `<div class="li"><div>${UI.esc(l.q)}<br><span class="muted">${UI.esc(l.name)} · ${fmt(l.ts)}</span></div>${badge(l.status)}</div>`).join('') || '<p class="muted pad">Belum ada pertanyaan.</p>'}</div></div></div>
-      <div class="row end"><button class="btn red sm" id="rs">Reset data demo</button></div>`;
+      <div class="row end"><button class="btn red sm" id="rs">Bersihkan data lokal</button></div>`;
     UI.$('#gd', b).onclick = () => Desk.go('docs');
     b.querySelectorAll('[data-a]').forEach(x => x.onclick = () => { const l = L.find(l => l.id == x.dataset.a); if (l) Desk.go('ed', { doc: { title: l.q, cat: 'Umum' } }); });
-    UI.$('#rs', b).onclick = () => UI.confirm('Semua data (dokumen, log, mahasiswa) kembali ke data awal. Lanjutkan?', () => { Store.reset(); location.reload(); });
+    UI.$('#rs', b).onclick = () => UI.confirm('Pengaturan dan riwayat chat di browser ini dibersihkan, lalu Anda keluar. Data di database tidak dihapus. Lanjutkan?', () => { Store.reset(); Auth.logout(); });
   }
 
   function docs(b) {
@@ -98,13 +98,14 @@ if (me) {
       if (pw.length < 6 || pw.length > 64) return UI.toast('Password harus 6–64 karakter', 'err');
       if (U.some(u => u.id === id)) return UI.toast('NIM sudah terdaftar', 'err');
       btn.disabled = true;
-      try { U.push({ id, role: 'student', name: nm, hash: await Store.hash(pw) }); Store.s('users', U); UI.toast('Mahasiswa ditambahkan'); Desk.refresh(); }
-      catch (err) { console.error(err); btn.disabled = false; UI.toast('Gagal menambah akun', 'err'); }
+      const r = await Store.addUser(id, nm, pw);
+      if (r.err) { btn.disabled = false; return UI.toast(r.err === 'exists' ? 'Akun NIM ini sudah ada di Firebase dengan password lain' : r.err === 'weak' ? 'Password terlalu lemah (min 6 karakter)' : 'Gagal menambah akun', 'err'); }
+      UI.toast('Mahasiswa ditambahkan'); Desk.refresh();
     };
     b.querySelectorAll('[data-d]').forEach(x => x.onclick = () => UI.confirm('Hapus akun mahasiswa ' + x.dataset.d + '?', () => { Store.s('users', Store.arr('users').filter(u => u.id !== x.dataset.d)); Store.del('chat_' + x.dataset.d); UI.toast('Akun dihapus'); Desk.refresh(); }));
   }
 
-  Desk.init({ user: me, apps: [
+  Store.init().then(() => Desk.init({ user: me, apps: [
     { id: 'dash', label: 'Ringkasan', icon: 'chart', title: 'RINGKASAN', render: dash },
     { id: 'docs', label: 'Dokumen', icon: 'folder', title: 'DOKUMEN AKADEMIK', render: docs },
     { id: 'logs', label: 'Log', icon: 'doc', title: 'LOG PERTANYAAN', render: logs },
@@ -112,5 +113,5 @@ if (me) {
     { id: 'set', label: 'Pengaturan', icon: 'gear', render: UI.settingsPage },
     { id: 'ed', label: 'Editor', icon: 'doc', title: 'EDITOR DOKUMEN', hide: true, parent: 'docs', render: editor },
     { id: 'out', label: 'Keluar', icon: 'power', danger: true, action: Desk.logout }
-  ] });
+  ] })).catch(e => { console.error(e); Boot.fatal('Gagal memuat data', 'Database tidak dapat dihubungi: ' + UI.esc(e.message)); });
 }

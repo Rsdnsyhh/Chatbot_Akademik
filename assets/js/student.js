@@ -49,7 +49,7 @@ if (me) {
       finally { typing.remove(); }
       const m = { r: 'b', t: a.text, src: a.src, ts: Date.now() }; H.push(m); draw(m); Store.s(key, H.slice(-100));
       const L = Store.arr('logs'); L.push({ id: Date.now(), ts: new Date().toISOString(), user: me.id, name: me.name, q: t, status: a.status, src: (a.src || []).map(s => s.title) });
-      Store.s('logs', L.slice(-500)); S.disabled = false; Q.focus();
+      Store.s('logs', L); S.disabled = false; Q.focus();
     }
     F.onsubmit = e => { e.preventDefault(); send(Q.value); };
     if (arg && arg.ask) { const q = arg.ask; arg.ask = null; send(q); } else Q.focus();
@@ -74,7 +74,7 @@ if (me) {
       <h3 class="sec">ETIKA &amp; PRIVASI</h3><div class="steps">${E.map(([i, t]) => `<div class="card row">${Icons.get(i, 24)}<span>${t}</span></div>`).join('')}</div>`;
   }
 
-  Desk.init({ user: me, apps: [
+  Store.init().then(() => Desk.init({ user: me, apps: [
     { id: 'home', label: 'Beranda', icon: 'home', render: home },
     { id: 'chat', label: 'Chatbot', icon: 'chat', title: 'CHATBOT AKADEMIK', render: chat },
     { id: 'docs', label: 'Dokumen', icon: 'folder', title: 'DOKUMEN AKADEMIK', render: docsPage },
@@ -82,5 +82,5 @@ if (me) {
     { id: 'set', label: 'Pengaturan', icon: 'gear', render: UI.settingsPage },
     { id: 'trash', label: 'Sampah', icon: 'trash', action: () => UI.confirm('Hapus seluruh riwayat percakapan Anda?', () => { Store.del(key); if (Desk.cur === 'chat') Desk.refresh(); UI.toast('Riwayat dihapus'); }) },
     { id: 'out', label: 'Keluar', icon: 'power', danger: true, action: Desk.logout }
-  ] });
+  ] })).catch(e => { console.error(e); Boot.fatal('Gagal memuat data', 'Database tidak dapat dihubungi: ' + UI.esc(e.message)); });
 }

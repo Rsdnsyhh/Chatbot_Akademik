@@ -1,12 +1,6 @@
 /* DATA AWAL (contoh). Ganti isi dokumen dengan dokumen akademik resmi, atau kelola lewat Dashboard Admin. */
 const SEED = {
-  users: [
-    { id: 'admin@unmul.ac.id', role: 'admin', name: 'Admin Akademik', pass: 'admin123' },
-    { id: '2409106025', role: 'student', name: 'Akhmad Zifa Al-Fatih', pass: 'unmul123' },
-    { id: '2409106024', role: 'student', name: 'Elfin Sinaga', pass: 'unmul123' },
-    { id: '2409106013', role: 'student', name: 'Rusdiansyah', pass: 'unmul123' },
-    { id: '2409106043', role: 'student', name: 'Rangga Lawe', pass: 'unmul123' }
-  ],
+  users: [],
   suggest: ['Bagaimana cara mengisi KRS?', 'Cara mengajukan cuti akademik', 'Syarat surat keterangan aktif kuliah', 'Jam layanan akademik'],
   docs: [
     { id: 'd1', title: 'Pengisian KRS', cat: 'Akademik', date: '2026-08-01', active: true,
