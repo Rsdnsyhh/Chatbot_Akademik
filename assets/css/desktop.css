@@ -1,0 +1,47 @@
+/* LAYOUT: shell dashboard (sidebar + panel), login, status bar, boot, responsif */
+#desktop{position:fixed;inset:0 0 36px 0;overflow:hidden;background:radial-gradient(#c3c6cc 1px,transparent 1px) 0 0/16px 16px,var(--white)}
+#desktop.center{display:grid;place-items:center}
+#taskbar{position:fixed;left:0;right:0;bottom:0;height:36px;z-index:9000;display:flex;align-items:center;gap:6px;padding:0 6px;background:var(--face);border-top:1px solid var(--ink);box-shadow:inset 0 1px #fff}
+.sunk{padding:2px 8px;font-size:12px;background:#fff;border:1px solid var(--ink);border-radius:2px;box-shadow:inset 1px 1px var(--dark)}
+.logo{font-size:clamp(14px,5.4vw,21px);color:var(--blue);text-align:center}
+.sub{font-size:8px;text-align:center;margin-bottom:4px}
+.loginbot{display:grid;place-items:center;animation:float 2.4s ease-in-out infinite}
+#shell{position:fixed;inset:0;display:grid;grid-template-columns:232px minmax(0,1fr);gap:14px;padding:14px;background:radial-gradient(#c3c6cc 1px,transparent 1px) 0 0/16px 16px,var(--white)}
+#side{display:flex;flex-direction:column;gap:10px;min-height:0}
+.brand{display:flex;gap:10px;align-items:center;padding:10px;background:var(--blue);color:#fff;border:1px solid var(--ink);border-radius:var(--r);box-shadow:inset 1px 1px rgba(255,255,255,.5)}
+.brand b{font:9px/1.7 var(--px)}
+.bi{display:grid;padding:3px;background:var(--white);border:1px solid var(--ink);border-radius:var(--r)}
+#nav{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:6px;padding:2px}
+.nv{display:flex;align-items:center;gap:10px;width:100%;min-width:0;padding:9px 10px;background:var(--face);border:1px solid var(--ink);border-radius:var(--r);box-shadow:inset 1px 1px #fff,inset -1px -1px var(--dark);font-weight:600;text-align:left;cursor:pointer}
+.nv svg{flex:none;transition:transform .12s}
+.nv:hover svg{transform:translateX(3px)}
+.nv.on{background:var(--blue);color:#fff;box-shadow:inset 1px 1px rgba(255,255,255,.5),inset -1px -1px rgba(0,0,0,.35)}
+.nv.first-act{margin-top:auto}
+.nv.red:hover{background:var(--red);color:#fff}
+.me{display:flex;gap:8px;align-items:center;min-width:0;padding:8px;background:#fff;border:1px solid var(--ink);border-radius:var(--r);box-shadow:inset 1px 1px var(--dark)}
+.me .av{width:34px;height:34px}.me div{min-width:0}
+.me b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.me span.r{font-size:11px;color:#555}
+#main{min-width:0;min-height:0}
+#page{height:100%}
+.sbar{display:flex;align-items:center;gap:10px;flex:none;padding:4px 10px;font-size:11px;background:var(--face);border-top:1px solid var(--ink);box-shadow:inset 0 1px #fff}
+.sbar .gap{flex:1}
+.live{color:var(--blue);font-weight:700}
+.live::before{content:"";display:inline-block;width:8px;height:8px;margin-right:6px;background:var(--blue);animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.enter{animation:slide .22s ease-out}
+@keyframes slide{from{opacity:0;transform:translateY(8px)}}
+.boot{position:fixed;inset:0;z-index:100001;display:grid;place-items:center;background:var(--white);transition:opacity .25s}
+@media(max-width:760px){
+ #shell{display:flex;flex-direction:column;padding:0;gap:0}
+ #main{flex:1;order:1}
+ #side{order:2;flex-direction:row;background:var(--face);border-top:1px solid var(--ink)}
+ .brand,.me{display:none}
+ #nav{flex-direction:row;gap:2px;padding:3px}
+ .nv{flex:1;flex-direction:column;justify-content:center;gap:2px;min-width:50px;padding:5px 2px;font-size:8px}.nv:hover svg{transform:none}.nv span{overflow:hidden;text-overflow:ellipsis;max-width:100%}
+ .nv.first-act{margin-top:0}
+ #page{border-radius:0;border-width:0 0 1px}
+ .toast{left:8px;right:8px;text-align:center}
+ .sbar #stat{display:none}
+}
+@media(max-height:520px){.brand,.me{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

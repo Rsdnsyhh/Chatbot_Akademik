@@ -1,0 +1,15 @@
+/* BASE: token warna (palet kit Retro-OS), reset, efek CRT */
+:root{--gray:#a0a0a0;--white:#f0f0f0;--blue:#0078d7;--red:#e81123;--ink:#16181d;--face:#e6e4de;--dark:#7d7d7d;
+--px:"Press Start 2P",ui-monospace,Consolas,monospace;--sans:Inter,"Segoe UI",system-ui,sans-serif;--r:4px}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{height:100dvh}
+body{font:14px/1.45 var(--sans);color:var(--ink);background:var(--white);overflow:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:99999;background:repeating-linear-gradient(0deg,rgba(0,0,0,.05) 0 1px,transparent 1px 3px)}
+body.no-crt::after{display:none}
+h1,h2,h3,.px{font-family:var(--px);font-weight:400;margin:0;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.row{display:flex;gap:6px;align-items:center}.col{display:flex;flex-direction:column;gap:8px}
+.end{justify-content:flex-end}.nw{white-space:nowrap}.pad{padding:8px}
+.muted{color:#555;font-size:12px}
